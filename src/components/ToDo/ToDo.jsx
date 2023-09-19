@@ -3,6 +3,7 @@ import { useState } from 'react';
 
 const ToDo = () => {
     const [tareas, setTareas] = useState(['galletas', 'lacoca']);
+    const [nuevaTarea, setNuevaTarea] = useState('');
 
     // function agregarTarea(tarea) {
     //     // const newTarea = 'tarea numero 2';
@@ -13,52 +14,53 @@ const ToDo = () => {
     // }
 
     const handleChange = (event) => {
-        const { name, value } = event.target;
-        setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
+        const { value } = event.target;
+        setNuevaTarea(value);
       };
     
     const handleSubmit = (event) => {
         event.preventDefault();
-        alert(`Name: ${formData.name}, Email: ${formData.email}, Message: ${formData.message}`
-        );
+        setTareas([...tareas, nuevaTarea]);
     };
 
-    tareas.map(t => console.log(t));
+    function editarTarea(index) {
+        const t = [...tareas];
+        setNuevaTarea(t[index]);
+    }
+
+    function eliminarTarea(index) {
+        const t = [...tareas.slice(0,index), ...tareas.slice(index + 1, tareas.length)];
+        setTareas(t);
+    }
 
     return <div>
         <h1>To Do List</h1>
 
         <section>
             <h2>LIST</h2>
+            <ul>
             {
-                tareas.map(tarea => {
+                tareas.map((tarea, index) => {
                     return (
                         <div>
-                            {tarea}
+                            <li>{tarea}</li><button onClick={() => editarTarea(index)}>EDITAR</button>
+                            <button onClick={() => eliminarTarea(index)}>ELIMINAR</button>
+                            <hr></hr>
                         </div>
                     )
                 })
+                
             }
+            </ul>
         </section>
 
         <section>
             <form onSubmit={handleSubmit}>
-                <label htmlFor="name">Name:</label>
-                <input type="text" id="name" name="name" value={ToDo.name} onChange={handleChange}/>
-
-                <label htmlFor="email">Email:</label>
-                <input type="email" id="email" name="email" value={ToDo.email} onChange={handleChange}/>
-
-                <label htmlFor="message">Message:</label>
-                <textarea id="message" name="message" value={ToDo.message} onChange={handleChange}/>
+                <label htmlFor="name">Nueva Tarea: </label>
+                <input type="text" id="tarea" name="tarea" value={nuevaTarea} onChange={handleChange}/>
 
                 <button type="submit">Submit</button>
             </form>
-            {/* <form >
-                <input type="text" name="" id="" />
-                <button onClick={agregarTarea}>Add</button>
-                <button onClick={() => agregarTarea('perro cosmico')}>Add</button>
-            </form> */}
         </section>
     </div>
 };
